@@ -43,7 +43,7 @@ const Messages = () => {
     };
     socket.on("message:new", handler);
     return () => socket.off("message:new", handler);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [socket, active]);
 
   useEffect(() => {
