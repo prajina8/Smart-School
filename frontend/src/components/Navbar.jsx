@@ -16,7 +16,7 @@ const Navbar = ({ onMenuClick }) => {
       setNotifications(data.notifications);
       setUnreadCount(data.unread);
     }).catch(() => {});
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, []);
 
   const handleOpenBell = async () => {
