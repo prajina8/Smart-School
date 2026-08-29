@@ -38,13 +38,11 @@ export const initSocket = (httpServer) => {
 
 export const getIo = () => io;
 
-// Emits a notification event to a specific user's room (all their tabs/devices)
 export const emitToUser = (userId, event, payload) => {
   if (!io) return;
   io.to(`user:${userId}`).emit(event, payload);
 };
 
-// Broadcast, e.g. for course-wide notices
 export const emitToRoom = (room, event, payload) => {
   if (!io) return;
   io.to(room).emit(event, payload);
