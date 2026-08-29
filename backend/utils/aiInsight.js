@@ -1,17 +1,6 @@
 import Attendance from "../models/Attendance.js";
 import User from "../models/User.js";
 
-/**
- * Generates a plain-language attendance insight for a student by comparing
- * their last 30 days of attendance against the prior 30 days.
- *
- * This is a deterministic heuristic (no external API key required), but it's
- * written so you can swap the "summary" line for a real LLM call: build the
- * same `stats` object below, send it to your AI provider of choice
- * (e.g. POST https://api.anthropic.com/v1/messages) asking it to turn the
- * numbers into a natural-language recommendation, and return that string
- * instead of `buildSummary(stats)`.
- */
 export const generateInsight = async (studentId) => {
   const now = new Date();
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
