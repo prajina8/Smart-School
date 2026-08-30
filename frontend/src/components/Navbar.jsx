@@ -16,7 +16,7 @@ const Navbar = ({ onMenuClick }) => {
       setNotifications(data.notifications);
       setUnreadCount(data.unread);
     }).catch(() => {});
-    
+   
   }, []);
 
   const handleOpenBell = async () => {

@@ -21,7 +21,7 @@ const Notices = () => {
 
   useEffect(() => {
     load();
-    
+ 
   }, [filter]);
 
   const handleCreate = async (e) => {
