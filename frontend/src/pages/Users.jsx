@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios.js";
-import { Search, Trash2, ShieldCheck } from "lucide-react";
+import { Search, Trash2, ShieldCheck, Plus, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 const roleBadge = {
@@ -9,10 +9,24 @@ const roleBadge = {
   student: "bg-green-50 text-green-700",
 };
 
+const emptyForm = {
+  name: "",
+  email: "",
+  password: "",
+  role: "student",
+  department: "",
+  rollNumber: "",
+  employeeId: "",
+  phone: "",
+};
+
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [q, setQ] = useState("");
   const [role, setRole] = useState("");
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+  const [saving, setSaving] = useState(false);
 
   const load = async () => {
     const params = new URLSearchParams();
@@ -24,7 +38,7 @@ const Users = () => {
 
   useEffect(() => {
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  
   }, [role]);
 
   const handleSearch = (e) => {
@@ -45,12 +59,136 @@ const Users = () => {
     load();
   };
 
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    if (form.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+    setSaving(true);
+    try {
+      await api.post("/users", form);
+      toast.success(`${form.role} account created for ${form.name}`);
+      setForm(emptyForm);
+      setShowForm(false);
+      load();
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to create user");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Users</h1>
-        <p className="text-slate-500 text-sm">Manage students, teachers, and admins</p>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Users</h1>
+          <p className="text-slate-500 text-sm">Manage students, teachers, and admins</p>
+        </div>
+        <button className="btn-primary" onClick={() => setShowForm((s) => !s)}>
+          <Plus size={16} /> Add user
+        </button>
       </div>
+
+      {showForm && (
+        <form onSubmit={handleCreate} className="card p-5 grid sm:grid-cols-2 gap-4">
+          <div>
+            <label className="label">Full name</label>
+            <input
+              required
+              className="input"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="label">Role</label>
+            <select
+              className="input"
+              value={form.role}
+              onChange={(e) => setForm({ ...form, role: e.target.value })}
+            >
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div>
+            <label className="label">Email</label>
+            <input
+              type="email"
+              required
+              className="input"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="label">Password</label>
+            <input
+              type="text"
+              required
+              minLength={6}
+              className="input"
+              placeholder="Set the password they'll log in with"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="label">Department</label>
+            <input
+              className="input"
+              value={form.department}
+              onChange={(e) => setForm({ ...form, department: e.target.value })}
+            />
+          </div>
+          <div>
+            <label className="label">Phone</label>
+            <input
+              className="input"
+              value={form.phone}
+              onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            />
+          </div>
+          {form.role === "student" && (
+            <div>
+              <label className="label">Roll number</label>
+              <input
+                className="input"
+                value={form.rollNumber}
+                onChange={(e) => setForm({ ...form, rollNumber: e.target.value })}
+              />
+            </div>
+          )}
+          {form.role === "teacher" && (
+            <div>
+              <label className="label">Employee ID</label>
+              <input
+                className="input"
+                value={form.employeeId}
+                onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
+              />
+            </div>
+          )}
+          <div className="sm:col-span-2 flex gap-2">
+            <button type="submit" disabled={saving} className="btn-primary">
+              {saving ? "Creating..." : "Create account"}
+            </button>
+            <button
+              type="button"
+              className="btn-secondary"
+              onClick={() => {
+                setShowForm(false);
+                setForm(emptyForm);
+              }}
+            >
+              <X size={16} /> Cancel
+            </button>
+          </div>
+        </form>
+      )}
 
       <div className="flex flex-wrap gap-2 items-center">
         <form onSubmit={handleSearch} className="relative">

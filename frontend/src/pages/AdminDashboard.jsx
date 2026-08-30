@@ -16,7 +16,7 @@ import {
   Legend,
 } from "recharts";
 
-const COLORS = ["#2563eb", "#60a5fa", "#93c5fd", "#1e40af", "#3b82f6", "#1d4ed8"];
+const COLORS = ["#b87539", "#3C3025", "#b36114", "#D85A30", "#b0401b", "#62200a"];
 
 const AdminDashboard = () => {
   const [data, setData] = useState(null);
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
                 <XAxis dataKey="date" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} domain={[0, 100]} unit="%" />
                 <Tooltip />
-                <Line type="monotone" dataKey="rate" stroke="#2563eb" strokeWidth={2} dot={false} />
+                <Line type="monotone" dataKey="rate" stroke="#66402b" strokeWidth={2} dot={false} />
               </LineChart>
             </ResponsiveContainer>
           )}
@@ -102,7 +102,7 @@ const AdminDashboard = () => {
           last 30 days)
         </h2>
         {data.atRiskStudents.length === 0 ? (
-          <p className="text-sm text-slate-400">No at-risk students right now. 🎉</p>
+          <p className="text-sm text-slate-400">No at-risk students right now. </p>
         ) : (
           <div className="divide-y divide-slate-100">
             {data.atRiskStudents.map((s) => (
