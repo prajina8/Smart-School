@@ -1,53 +1,241 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+* {
+  box-sizing: border-box;
+}
 
-html, body, #root {
-  height: 100%;
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
 }
 
 body {
-  @apply bg-cream text-espresso font-sans antialiased;
+  font-family: "Inter", Arial, sans-serif;
+  background: #fff8ee;
+  color: #432818;
 }
+
+/* =========================
+   COLORS
+========================= */
+
+:root {
+  --cream: #fff8ee;
+  --cream-dark: #f8ead8;
+
+  --orange: #f4a261;
+  --orange-dark: #e76f51;
+  --orange-light: #fce5cf;
+
+  --brown: #6b4226;
+  --brown-dark: #432818;
+  --brown-light: #8b6548;
+
+  --green: #a8c3a0;
+  --green-light: #e8f3e8;
+  --green-dark: #668b64;
+
+  --red: #d96c6c;
+  --red-light: #fde8e7;
+
+  --white: #ffffff;
+
+  --border: #eadcc9;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 10px 18px;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition: 0.2s ease;
+}
+
+/* Main button */
+.btn-primary {
+  background: var(--orange);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--orange-dark);
+}
+
+/* Secondary */
+.btn-secondary {
+  background: var(--green-light);
+  color: var(--brown);
+}
+
+.btn-secondary:hover {
+  background: #d7e8d5;
+}
+
+/* Danger */
+.btn-danger {
+  background: var(--red-light);
+  color: #b94b4b;
+}
+
+.btn-danger:hover {
+  background: #f8d5d3;
+}
+
+/* Outline */
+.btn-outline {
+  background: transparent;
+  color: var(--brown);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+  background: var(--cream-dark);
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: white;
+  color: var(--brown-dark);
+
+  font-family: inherit;
+  font-size: 14px;
+
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--orange);
+  box-shadow: 0 0 0 3px var(--orange-light);
+}
+
+.input::placeholder {
+  color: #a89482;
+}
+
+/* =========================
+   LABEL
+========================= */
+
+.label {
+  display: block;
+  margin-bottom: 6px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  color: var(--brown);
+}
+
+/* =========================
+   CARD
+========================= */
+
+.card {
+  background: var(--white);
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  box-shadow: 0 4px 15px rgba(107, 66, 38, 0.06);
+}
+
+/* =========================
+   ATTENDANCE
+========================= */
+
+.attendance-present {
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.attendance-absent {
+  background: var(--red-light);
+  color: #b94b4b;
+}
+
+.attendance-late {
+  background: var(--orange-light);
+  color: var(--brown);
+}
+
+/* =========================
+   RESULT / MARKS
+========================= */
+
+.result-pass {
+  background: var(--green-light);
+  color: var(--green-dark);
+}
+
+.result-fail {
+  background: var(--red-light);
+  color: #b94b4b;
+}
+
+.result-warning {
+  background: var(--orange-light);
+  color: var(--brown);
+}
+
+/* =========================
+   BADGE
+========================= */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* =========================
+   SCROLLBAR
+========================= */
 
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
+
 ::-webkit-scrollbar-thumb {
-  @apply bg-sage/40 rounded-full;
+  background: var(--green);
+  border-radius: 999px;
 }
 
-.card {
-  @apply bg-white rounded-2xl border border-sage/30 shadow-sm;
-}
-
-.btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed;
-}
-.btn-primary {
-  @apply btn bg-terracotta-600 text-white hover:bg-terracotta-700;
-}
-.btn-secondary {
-  @apply btn bg-sage/15 text-espresso hover:bg-sage/25;
-}
-.btn-danger {
-  @apply btn bg-red-50 text-red-600 hover:bg-red-100;
-}
-.btn-outline {
-  @apply btn border border-sage/30 text-espresso hover:bg-sage/25;
-}
-
-.input {
-  @apply w-full rounded-xl border border-sage/30 px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-terracotta-500 focus:border-transparent placeholder:text-sage;
-}
-
-.label {
-  @apply block text-sm font-medium text-espresso mb-1.5;
-}
-
-.badge {
-  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+::-webkit-scrollbar-track {
+  background: var(--cream);
 }
