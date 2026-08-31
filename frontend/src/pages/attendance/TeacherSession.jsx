@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 
 
 const TeacherSession = () => {
+    const navigate = useNavigate();
 
   const [courses, setCourses] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -75,7 +76,13 @@ const setStatus = (studentId, status) => {
 
     console.log("Attendance response:", response.data);
 
-    toast.success("Attendance saved");
+  toast.success("Attendance saved successfully!");
+
+setTimeout(() => {
+  navigate("/dashboard");
+}, 800);
+
+
   } catch (err) {
     console.error("Attendance error:", err);
     console.error("Server response:", err.response?.data);
