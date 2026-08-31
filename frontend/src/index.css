@@ -1,5 +1,30 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
+@import "tailwindcss";
+
+
+@theme {
+  --color-cream: #fff8ee;
+  --color-cream-dark: #f8ead8;
+
+  --color-orange: #f4a261;
+  --color-orange-light: #fce5cf;
+  --color-orange-dark: #e76f51;
+
+  --color-brown: #6b4226;
+  --color-brown-dark: #432818;
+  --color-brown-light: #8b6548;
+
+  --color-sage: #a8c3a0;
+  --color-sage-light: #e8f3e8;
+  --color-sage-dark: #668b64;
+
+  --color-soft-red: #fde8e7;
+  --color-danger: #b94b4b;
+}
+
+
+
 * {
   box-sizing: border-box;
 }
@@ -8,51 +33,16 @@ html,
 body,
 #root {
   min-height: 100%;
-  margin: 0;
 }
 
 body {
+  margin: 0;
   font-family: "Inter", Arial, sans-serif;
   background: #fff8ee;
   color: #432818;
 }
 
-/* =========================
-   COLORS
-========================= */
 
-:root {
-  --cream: #fff8ee;
-  --cream-dark: #f8ead8;
-
-  --orange: #f4a261;
-  --orange-dark: #e76f51;
-  --orange-light: #fce5cf;
-
-  --brown: #6b4226;
-  --brown-dark: #432818;
-  --brown-light: #8b6548;
-
-  --green: #a8c3a0;
-  --green-light: #e8f3e8;
-  --green-dark: #668b64;
-
-  --red: #d96c6c;
-  --red-light: #fde8e7;
-
-  --white: #ffffff;
-
-  --border: #eadcc9;
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
 
 .btn {
   display: inline-flex;
@@ -60,182 +50,299 @@ button {
   justify-content: center;
   gap: 8px;
 
-  padding: 10px 18px;
-
-  border: none;
-  border-radius: 10px;
+  border-radius: 12px;
+  padding: 10px 16px;
 
   font-size: 14px;
   font-weight: 600;
 
-  transition: 0.2s ease;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  border: none;
 }
 
-/* Main button */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .btn-primary {
-  background: var(--orange);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 12px;
+  padding: 10px 16px;
+
+  background: #f4a261;
   color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  border: none;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
-  background: var(--orange-dark);
+  background: #e76f51;
+  box-shadow: 0 4px 10px rgba(231, 111, 81, 0.2);
 }
 
-/* Secondary */
 .btn-secondary {
-  background: var(--green-light);
-  color: var(--brown);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 12px;
+  padding: 10px 16px;
+
+  background: #e8f3e8;
+  color: #6b4226;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  border: none;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
 .btn-secondary:hover {
-  background: #d7e8d5;
+  background: #d6e8d4;
 }
 
-/* Danger */
 .btn-danger {
-  background: var(--red-light);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 12px;
+  padding: 10px 16px;
+
+  background: #fde8e7;
   color: #b94b4b;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  border: none;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
 .btn-danger:hover {
   background: #f8d5d3;
 }
 
-/* Outline */
 .btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border-radius: 12px;
+  padding: 10px 16px;
+
   background: transparent;
-  color: var(--brown);
-  border: 1px solid var(--border);
+  color: #6b4226;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  border: 1px solid #eadcc9;
+  cursor: pointer;
+
+  transition: all 0.2s ease;
 }
 
 .btn-outline:hover {
-  background: var(--cream-dark);
+  background: #f8ead8;
 }
 
-/* =========================
-   INPUTS
-========================= */
+
 
 .input {
   width: 100%;
+
   padding: 12px 14px;
 
-  border: 1px solid var(--border);
+  border: 1px solid #eadcc9;
   border-radius: 10px;
 
   background: white;
-  color: var(--brown-dark);
+  color: #432818;
 
   font-family: inherit;
   font-size: 14px;
 
   outline: none;
+
+  transition: all 0.2s ease;
 }
 
 .input:focus {
-  border-color: var(--orange);
-  box-shadow: 0 0 0 3px var(--orange-light);
+  border-color: #f4a261;
+  box-shadow: 0 0 0 3px rgba(244, 162, 97, 0.18);
 }
 
 .input::placeholder {
   color: #a89482;
 }
 
-/* =========================
-   LABEL
-========================= */
 
 .label {
   display: block;
+
   margin-bottom: 6px;
+
+  color: #6b4226;
 
   font-size: 14px;
   font-weight: 600;
-
-  color: var(--brown);
 }
 
-/* =========================
-   CARD
-========================= */
+
 
 .card {
-  background: var(--white);
+  background: white;
 
-  border: 1px solid var(--border);
+  border: 1px solid #eadcc9;
   border-radius: 16px;
 
   box-shadow: 0 4px 15px rgba(107, 66, 38, 0.06);
 }
 
-/* =========================
-   ATTENDANCE
-========================= */
 
-.attendance-present {
-  background: var(--green-light);
-  color: var(--green-dark);
-}
-
-.attendance-absent {
-  background: var(--red-light);
-  color: #b94b4b;
-}
-
-.attendance-late {
-  background: var(--orange-light);
-  color: var(--brown);
-}
-
-/* =========================
-   RESULT / MARKS
-========================= */
-
-.result-pass {
-  background: var(--green-light);
-  color: var(--green-dark);
-}
-
-.result-fail {
-  background: var(--red-light);
-  color: #b94b4b;
-}
-
-.result-warning {
-  background: var(--orange-light);
-  color: var(--brown);
-}
-
-/* =========================
-   BADGE
-========================= */
 
 .badge {
   display: inline-flex;
   align-items: center;
 
-  padding: 5px 10px;
-
   border-radius: 999px;
+
+  padding: 5px 10px;
 
   font-size: 12px;
   font-weight: 600;
 }
 
-/* =========================
-   SCROLLBAR
-========================= */
+.attendance-present {
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 999px;
+
+  padding: 5px 10px;
+
+  background: #e8f3e8;
+  color: #668b64;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.attendance-absent {
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 999px;
+
+  padding: 5px 10px;
+
+  background: #fde8e7;
+  color: #b94b4b;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.attendance-late {
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 999px;
+
+  padding: 5px 10px;
+
+  background: #fce5cf;
+  color: #6b4226;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+
+.result-pass {
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 999px;
+
+  padding: 5px 10px;
+
+  background: #e8f3e8;
+  color: #668b64;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.result-fail {
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 999px;
+
+  padding: 5px 10px;
+
+  background: #fde8e7;
+  color: #b94b4b;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.result-warning {
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 999px;
+
+  padding: 5px 10px;
+
+  background: #fce5cf;
+  color: #6b4226;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
 
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
+::-webkit-scrollbar-track {
+  background: #fff8ee;
+}
+
 ::-webkit-scrollbar-thumb {
-  background: var(--green);
+  background: #a8c3a0;
   border-radius: 999px;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--cream);
+::-webkit-scrollbar-thumb:hover {
+  background: #668b64;
 }
