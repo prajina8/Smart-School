@@ -79,7 +79,7 @@ const setStatus = (studentId, status) => {
   toast.success("Attendance saved successfully!");
 
 setTimeout(() => {
-  navigate("/dashboard");
+  navigate("/");
 }, 800);
 
 
