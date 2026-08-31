@@ -19,7 +19,7 @@ router.use(protect);
 router.post("/sessions", authorize("admin", "teacher"), openSession);
 router.post("/sessions/:id/rotate", authorize("admin", "teacher"), rotateQrToken);
 router.post("/sessions/:id/close", authorize("admin", "teacher"), closeSession);
-
+router.post("/take", authorize("admin", "teacher"), takeAttendance);
 router.post("/mark", authorize("student"), markAttendance);
 router.post("/manual", authorize("admin", "teacher"), manualMark);
 
