@@ -1,148 +1,46 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { MapPin, CheckCircle2, WifiOff, ScanLine } from "lucide-react";
-import toast from "react-hot-toast";
-import { markAttendanceWithOfflineSupport, syncOfflineQueue, initOfflineSync } from "../../utils/offlineQueue.js";
+import api from "../../api/axios.js";
+import { CalendarCheck2 } from "lucide-react";
+
+const statusStyle = {
+  present: "bg-green-50 text-green-700",
+  late: "bg-amber-50 text-amber-700",
+  absent: "bg-red-50 text-red-700",
+};
 
 const StudentCheckIn = () => {
-  const [searchParams] = useSearchParams();
-  const [sessionId, setSessionId] = useState(searchParams.get("session") || "");
-  const [token, setToken] = useState(searchParams.get("token") || "");
-  const [status, setStatus] = useState("idle"); // idle | locating | submitting | success | queued | error
-  const [message, setMessage] = useState("");
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [records, setRecords] = useState([]);
 
   useEffect(() => {
-    const goOnline = () => setIsOnline(true);
-    const goOffline = () => setIsOnline(false);
-    window.addEventListener("online", goOnline);
-    window.addEventListener("offline", goOffline);
-    initOfflineSync((result) => toast.success(`Synced ${result.synced} queued attendance record(s)`));
-    return () => {
-      window.removeEventListener("online", goOnline);
-      window.removeEventListener("offline", goOffline);
-    };
+    api.get("/attendance").then(({ data }) => setRecords(data.records));
   }, []);
 
-  const handleCheckIn = async () => {
-    if (!sessionId || !token) {
-      toast.error("Enter or scan a valid session and code first");
-      return;
-    }
-    setStatus("locating");
-    setMessage("");
-
-    if (!navigator.geolocation) {
-      toast.error("Your browser doesn't support location services");
-      setStatus("error");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      async (pos) => {
-        setStatus("submitting");
-        try {
-          const result = await markAttendanceWithOfflineSupport({
-            sessionId,
-            qrToken: token,
-            lat: pos.coords.latitude,
-            lng: pos.coords.longitude,
-          });
-          if (result.status === "synced") {
-            setStatus("success");
-            setMessage("Attendance marked successfully!");
-            toast.success("Checked in!");
-          } else {
-            setStatus("queued");
-            setMessage("You're offline — saved locally and will sync automatically once you're back online.");
-            toast("Saved offline, will sync later", { icon: "📴" });
-          }
-        } catch (err) {
-          setStatus("error");
-          setMessage(err.response?.data?.message || "Could not mark attendance");
-        }
-      },
-      () => {
-        setStatus("error");
-        setMessage("Location permission denied. Enable GPS to check in.");
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  };
-
-  const manualSync = async () => {
-    const result = await syncOfflineQueue();
-    toast(`Synced ${result.synced}, ${result.remaining} still queued`, { icon: "🔄" });
-  };
-
   return (
-    <div className="max-w-md mx-auto space-y-6">
+    <div className="max-w-2xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Mark attendance</h1>
-        <p className="text-slate-500 text-sm">Scan your teacher's QR code, or enter it manually below</p>
+        <h1 className="text-2xl font-bold text-espresso">Your attendance</h1>
+        <p className="text-sage text-sm">Marked by your teacher for each class</p>
       </div>
 
-      {!isOnline && (
-        <div className="card p-3 bg-amber-50 border-amber-200 flex items-center gap-2 text-amber-700 text-sm">
-          <WifiOff size={16} /> You're offline — check-ins will be queued and synced automatically.
-        </div>
-      )}
-
-      <div className="card p-6 space-y-4">
-        <div>
-          <label className="label">Session ID</label>
-          <input
-            className="input font-mono text-xs"
-            placeholder="Paste from teacher's screen or scan QR"
-            value={sessionId}
-            onChange={(e) => setSessionId(e.target.value)}
-          />
-        </div>
-        <div>
-          <label className="label">Attendance code</label>
-          <input
-            className="input font-mono text-xs"
-            placeholder="Current rotating code"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-          />
-        </div>
-
-        <button
-          onClick={handleCheckIn}
-          disabled={status === "locating" || status === "submitting"}
-          className="btn-primary w-full"
-        >
-          <MapPin size={16} />
-          {status === "locating"
-            ? "Getting your location..."
-            : status === "submitting"
-            ? "Submitting..."
-            : "Check in"}
-        </button>
-
-        {status === "success" && (
-          <div className="flex items-center gap-2 text-green-700 text-sm bg-green-50 rounded-xl p-3">
-            <CheckCircle2 size={18} /> {message}
+      <div className="card p-5">
+        {records.length === 0 ? (
+          <div className="text-center py-10 text-sage">
+            <CalendarCheck2 className="mx-auto mb-2" size={28} />
+            No attendance records yet.
+          </div>
+        ) : (
+          <div className="divide-y divide-sage/20">
+            {records.map((r) => (
+              <div key={r._id} className="flex items-center justify-between py-3">
+                <div>
+                  <p className="text-sm font-medium text-espresso">{r.course?.title}</p>
+                  <p className="text-xs text-sage">{new Date(r.markedAt).toLocaleDateString()}</p>
+                </div>
+                <span className={`badge capitalize ${statusStyle[r.status]}`}>{r.status}</span>
+              </div>
+            ))}
           </div>
         )}
-        {status === "queued" && (
-          <div className="flex items-center gap-2 text-amber-700 text-sm bg-amber-50 rounded-xl p-3">
-            <WifiOff size={18} /> {message}
-          </div>
-        )}
-        {status === "error" && (
-          <div className="text-red-600 text-sm bg-red-50 rounded-xl p-3">{message}</div>
-        )}
-      </div>
-
-      <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-        <span className="flex items-center gap-1.5">
-          <ScanLine size={14} /> Tip: scanning the QR pre-fills these fields automatically
-        </span>
-        <button onClick={manualSync} className="underline">
-          Sync now
-        </button>
       </div>
     </div>
   );
