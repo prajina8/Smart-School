@@ -8,6 +8,7 @@ import {
   getAttendance,
   getAnalytics,
   getInsights,
+  takeAttendance,
 } from "../controllers/attendanceController.js";
 import { protect, authorize } from "../middleware/auth.js";
 

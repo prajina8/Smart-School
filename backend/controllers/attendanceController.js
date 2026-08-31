@@ -46,6 +46,45 @@ export const openSession = async (req, res, next) => {
 };
 
 
+export const takeAttendance = async (req, res, next) => {
+  try {
+    const { courseId, records, date } = req.body; // records: [{ studentId, status }]
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).json({ message: "Course not found" });
+    if (req.user.role === "teacher" && String(course.teacher) !== String(req.user._id)) {
+      return res.status(403).json({ message: "Not your course" });
+    }
+    if (!Array.isArray(records) || records.length === 0) {
+      return res.status(400).json({ message: "No attendance records provided" });
+    }
+
+    const session = await AttendanceSession.create({
+      course: course._id,
+      teacher: req.user._id,
+      date: date ? new Date(date) : new Date(),
+      isOpen: false,
+      currentQrToken: generateQrToken(),
+    });
+
+    const results = await Promise.all(
+      records.map(({ studentId, status }) =>
+        Attendance.findOneAndUpdate(
+          { session: session._id, student: studentId },
+          { session: session._id, course: course._id, student: studentId, status },
+          { upsert: true, new: true }
+        )
+      )
+    );
+
+    results.forEach((r) => emitToUser(r.student, "attendance:marked", { courseId: course._id }));
+
+    res.status(201).json({ session, records: results });
+  } catch (err) {
+    next(err);
+  }
+};
+
+
 export const rotateQrToken = async (req, res, next) => {
   try {
     const session = await AttendanceSession.findById(req.params.id);
