@@ -33,23 +33,59 @@ const TeacherSession = () => {
     });
   }, [selectedCourse]);
 
-  const setStatus = (studentId, status) => {
-    setStatuses((prev) => ({ ...prev, [studentId]: status }));
-  };
+const setStatus = (studentId, status) => {
+  setStatuses((prev) => {
+    const updated = {
+      ...prev,
+      [studentId]: status,
+    };
 
-  const submit = async () => {
-    if (!selectedCourse || students.length === 0) return;
-    setSaving(true);
-    try {
-      const records = students.map((s) => ({ studentId: s._id, status: statuses[s._id] || "absent" }));
-      await api.post("/attendance/take", { courseId: selectedCourse, records, date });
-      toast.success("Attendance saved");
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to save attendance");
-    } finally {
-      setSaving(false);
-    }
-  };
+    console.log("Updated attendance:", updated);
+
+    return updated;
+  });
+};
+
+ const submit = async () => {
+  if (!selectedCourse || students.length === 0) {
+    toast.error("Please select a course with students");
+    return;
+  }
+
+  setSaving(true);
+
+  try {
+    const records = students.map((s) => ({
+      studentId: s._id,
+      status: statuses[s._id] || "absent",
+    }));
+
+    console.log("Sending attendance:", {
+      courseId: selectedCourse,
+      records,
+      date,
+    });
+
+    const response = await api.post("/attendance/take", {
+      courseId: selectedCourse,
+      records,
+      date,
+    });
+
+    console.log("Attendance response:", response.data);
+
+    toast.success("Attendance saved");
+  } catch (err) {
+    console.error("Attendance error:", err);
+    console.error("Server response:", err.response?.data);
+
+    toast.error(
+      err.response?.data?.message || "Failed to save attendance"
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   return (
     <div className="space-y-6">
